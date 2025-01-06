@@ -5,6 +5,7 @@ namespace App\Models;
 // 使うツールを取り込んでいます。
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 // Productという名前のツール（クラス）を作っています。
 class Product extends Model
@@ -13,7 +14,6 @@ class Product extends Model
     use HasFactory;
 
     // 以下の情報（属性）を一度に保存したり変更したりできるように設定しています。
-    // $fillable を設定しないと、Laravelはセキュリティリスクを避けるために、この一括代入をブロックします。
     protected $fillable = [
         'product_name',
         'price',
@@ -26,7 +26,6 @@ class Product extends Model
     // Productモデルがsalesテーブルとリレーション関係を結ぶためのメソッドです
     public function sales()
     {
-        // return $this->hasMany(Sale::class);
 
         return $this->hasMany(Sale::class, 'product_id');
     }
@@ -37,6 +36,18 @@ class Product extends Model
         return $this->belongsTo(Company::class);
     }
 
+    public function registProduct($data) {
+        // 登録処理
+        DB::table('products')->insert([
+            'product_name' => $data->product_name,
+            'company_id' => $data->company_id,
+            'price' => $data->price,
+            'stock' => $data->stock,
+            'img_path' => $data->img,
+            'comment' => $data->comment,
+        ]);
+    }
+    
 
 
 }

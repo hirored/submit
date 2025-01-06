@@ -10,7 +10,7 @@
         <dt class="col-sm-3">商品情報ID</dt>
         <dd class="col-sm-9">{{ $product->id }}</dd>
 
-        <dt class="col-sm-3">商品画像</dt>
+        <dt class="col-sm-3">商品名</dt>
         <dd class="col-sm-9">{{ $product->product_name }}</dd>
 
         <dt class="col-sm-3">メーカー</dt>
