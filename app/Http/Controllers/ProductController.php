@@ -181,7 +181,7 @@ class ProductController extends Controller //コントローラークラスを�
         if ($product->save()) {
             return redirect()->route('products.index')->with('success', 'Products updated successfully');
         } else {
-            dd('保存に失敗しました');
+            
         }
         // 全ての処理が終わったら、商品一覧画面に戻ります。
         return redirect()->route('products.index')
@@ -191,7 +191,6 @@ class ProductController extends Controller //コントローラークラスを�
     
     public function find(ProductsRequest $request){
     // 商品名の検索キーワードがある場合、そのキーワードを含む商品をクエリに追加
-    dd('$product');
     $query = Product::query();
     
     if($search = $request->search){

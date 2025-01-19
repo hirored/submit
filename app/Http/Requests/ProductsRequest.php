@@ -52,12 +52,12 @@ public function attributes()
  */
 public function messages() {
     return [
-        'product_name.required' => ':attributesは必須項目です。',
-        'price.required' => ':attributesは必須項目です。',
-        'price.integer' => ':attributesは数字で入力してください。',
-        'stock.required' => ':attributesは必須項目です。',
-        'stock.integer' => ':attributesは数字入力してください。',
-        'company_id.required' => ':attributesは:max字以内で入力してください。',
+        'product_name.required' => ':attributeは必須項目です。',
+        'price.required' => ':attributeは必須項目です。',
+        'price.integer' => ':attributeは数字で入力してください。',
+        'stock.required' => ':attributeは必須項目です。',
+        'stock.integer' => ':attributeは数字入力してください。',
+        'company_id.required' => ':attributeは:max字以内で入力してください。',
         
     ];
 }
