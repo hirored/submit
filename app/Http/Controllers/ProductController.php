@@ -9,84 +9,132 @@ use App\Http\Requests\ProductsRequest; // Requestクラスという機能を使�
 // Requestクラスはブラウザに表示させるフォームから送信されたデータをコントローラのメソッドで引数として受け取ることができます。
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 
 class ProductController extends Controller //コントローラークラスを継承します（コントローラーの機能が使えるようになります）
 {
     
-    public function index(Request $request){
+    // public function index(Request $request){
         
+    //     $query = Product::query();
+    //     if($request->product_name){
+    //         $query->where('product_name', 'LIKE', "%{$request->product_name}%");
+    //     }
+        
+    //     if($request->company_id){
+    //         $query->where('company_id', '=',$request->company_id);
+    //     }
+
+        
+        
+    //     $products = $query->orderBy('id', 'asc')->get();
+    //     $companies = Company::all();
+    //     // 全ての商品情報を取得しています。これが商品一覧画面で使われます。
+        
+    
+
+    //     // 商品一覧画面を表示します。その際に、先ほど取得した全ての商品情報を画面に渡します。
+    //     return view('products', compact('products','companies'));
+    //     // productsディレクトリのindex.blade.phpを表示させます
+    //     // compact('products')によって
+    //     // $productsという変数の内容が、ビューファイル側で利用できるようになります。
+    //     // ビューファイル内で$productsと書くことでその変数の中身にアクセスできます。
+    // }
+    public function index(Request $request)
+{
+    $query = Product::with('company'); // company情報も取得
+
+    // 商品名での部分一致検索
+    if ($request->product_name) {
+        $query->where('product_name', 'LIKE', "%{$request->product_name}%");
+    }
+
+    // 会社IDで絞り込み
+    if ($request->company_id) {
+        $query->where('company_id', '=', $request->company_id);
+    }
+
+    // ▼ 並び替えの処理を追加
+    $sort = $request->input('sort');            // 例: "price", "stock"
+    $direction = $request->input('direction');  // 例: "asc", "desc"
+
+    if (in_array($sort, ['price', 'stock']) && in_array($direction, ['asc', 'desc'])) {
+        $query->orderBy($sort, $direction);
+    } else {
+        $query->orderBy('id', 'asc'); // デフォルトの並び順
+    }
+
+    $products = $query->get();
+    $companies = Company::all();
+
+    return view('products', compact('products', 'companies'));
+}
+
+
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+        Log::info($request);
+        $company_id = $request->input('company_id');
+        $min_price = $request->input('min_price');
+        $max_price = $request->input('max_price');
+        $min_stock = $request->input('min_stock');
+        $max_stock = $request->input('max_stock');
         $query = Product::query();
-        if($request->product_name){
-            $query->where('product_name', 'LIKE', "%{$request->product_name}%");
-        }
-        
-        if($request->company_id){
-            $query->where('company_id', '=',$request->company_id);
+
+        if ($keyword) {
+            $query->where('product_name', 'LIKE', "%{$keyword}%");
         }
 
+        if ($company_id) {
+            $query->where('company_id', $company_id);
+        }
+
+        if ($min_price) {
+            $query->where('price', '>', $min_price);
+        }
+
+        if ($max_price) {
+            $query->where('price', '<', $max_price);
+        }
+
+        if ($min_stock) {
+            $query->where('stock', '<', $mix_stock);
+        }
+
+        if ($max_stock) {
+            $query->where('stock', '>', $max_stock);
+        }
+
+        $products = $query->with('company')->get();
+        Log::info($products);
         
-        
-        $products = $query->orderBy('id', 'asc')->get();
-        $companies = Company::all();
-        // 全ての商品情報を取得しています。これが商品一覧画面で使われます。
-        
+
+        if($request->hasFile('img_path')){ 
+            $filename = $request->img_path->getClientOriginalName();
+            $filePath = $request->img_path->storeAs('products', $filename, 'public');
+            $product->img_path = '/storage/' . $filePath;
+        }
+
+        return response()->json($products);
+    }
+
+    public function destroy($id){
+        $product = Product::find($id);
     
-
-        // 商品一覧画面を表示します。その際に、先ほど取得した全ての商品情報を画面に渡します。
-        return view('products', compact('products','companies'));
-        // productsディレクトリのindex.blade.phpを表示させます
-        // compact('products')によって
-        // $productsという変数の内容が、ビューファイル側で利用できるようになります。
-        // ビューファイル内で$productsと書くことでその変数の中身にアクセスできます。
-    }
-
+        if (!$product) {
+            return response()->json(['success' => false, 'message' => '商品が見つかりませんでした。']);
+        }
     
-    public function getList(Request $request){
-    // selectbox データを取得
-    $companies = companies::where('company_name')->get();
-
-    $query = Products::query();
-
-    // この行の後にクエリを逐次構築していきます。
-    // そして、最終的にそのクエリを実行するためのメソッド（例：get(), first(), paginate() など）を呼び出すことで、データベースに対してクエリを実行します。
-    // 商品名の検索キーワードがある場合、そのキーワードを含む商品をクエリに追加
-
-    if($search = $request->search){
-        $query->where('product_name', 'LIKE', "%{$search}%");
-
-    // 検索機能
-    $searchword = $request->input('searchword');
-    $companyId = $request->input('company_id');
-
-    $query = Products::query()
-        // Company アソシエーションを取得
-        ->with([
-        'companies',
-    ]);
-
-    if (!empty($searchword)) {
-        // メソッドチェーンを利用
-        $query->where('company_id','LIKE',"%{$searchword}%")
-            ->orWhere('product_name','LIKE',"%{$searchword}%");
-            
+        // 関連する sales データを削除
+        \DB::table('sales')->where('product_id', $id)->delete();
+    
+        $product->delete();
+    
+        return response()->json(['success' => true, 'message' => '商品を削除しました。']);
     }
 
-    if (!empty($companyId)) {
-        // ここで ->get() は不要
-        $query->where('company_id',$companyId);
-    }
-
-    // 全件取得 
-    $products = $query->orderBy('id', 'desc')->get();
-
-    return view('products', compact(
-        'products',
-        'companies',
-        'searchword'
-    ));
-}
-}
 
     public function create(){
         // 商品作成画面で会社の情報が必要なので、全ての会社の情報を取得します。
@@ -179,12 +227,12 @@ class ProductController extends Controller //コントローラークラスを�
         $product->save();
         // モデルインスタンスである$productに対して行われた変更をデータベースに保存するためのメソッド（機能）です。
         if ($product->save()) {
-            return redirect()->route('products.index')->with('success', 'Products updated successfully');
+            return redirect()->route('products')->with('success', 'Products updated successfully');
         } else {
             
         }
         // 全ての処理が終わったら、商品一覧画面に戻ります。
-        return redirect()->route('products.index')
+        return redirect()->route('products')
             ->with('success', 'Products updated successfully');
         // ビュー画面にメッセージを代入した変数(success)を送ります
     }
@@ -201,19 +249,11 @@ class ProductController extends Controller //コントローラークラスを�
     $products = $query->paginate(10);
 
     // 商品一覧ビューを表示し、取得した商品情報をビューに渡す
-    return view('products.index', ['products' => $products]);
+    return view('products', ['products' => $products]);
 
     }
 
-    public function destroy($id)
-{
-    // 関連する sales のデータを削除
-    \DB::table('sales')->where('product_id', $id)->delete();
+    
 
-    // products のデータを削除
-    \DB::table('products')->where('id', $id)->delete();
 
-    return redirect()->route('products.index')->with('success', '商品を削除しました。');
 }
-}
-

@@ -21,4 +21,12 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+
+    protected function mapApiRoutes()
+{
+    Route::middleware('api')
+        ->prefix('api')  // ここがあると `/api/` が付与される
+        ->group(base_path('routes/api.php'));
+}
+
 }

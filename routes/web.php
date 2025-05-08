@@ -11,6 +11,8 @@ use App\Http\Controllers\ProductShowController;
 use App\Http\Controllers\ProductEditController;
 // 編集画面に作ったProductShowControllerを定義
 
+
+
 Route::get('/', function () {
     // ウェブサイトのホームページ（'/'のURL）にアクセスした場合のルートです
     if (Auth::check()) {
@@ -44,24 +46,37 @@ Route::group(['middleware' => 'auth'], function () {
 
 Auth::routes();
 
+Route::get('/search', [App\Http\Controllers\ProductController::class, 'search'])->name('products.search');
 
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
 Route::get('/create', [ProductController::class, 'create'])->name('products.create');
 
 Route::post('/products/store', [App\Http\Controllers\ProductController::class, 'store'])->name('products.store');
 
-
 Route::POST('/products', [App\Http\Controllers\ProductController::class, 'store'])->name('products_store');
 
 
-// Route::get('/show/{id}', [ProductShowController::class, 'show'])->name('products_show');
+Route::get('/show/{id}', [ProductShowController::class, 'show'])->name('products_show');
 
-Route::get('/show',[App\Http\Controllers\ProductController::class, 'show'])->name('products_show');
+Route::get('/show/{id}',[App\Http\Controllers\ProductController::class, 'show'])->name('products_show');
 
 Route::POST('/update/{product}', [App\Http\Controllers\ProductController::class, 'update'])->name('products.update');
 
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
-Auth::routes();
+Route::get('/products', [ProductController::class, 'index'])->name('products');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Route::get('/search', [ProductController::class, 'search'])->name('search');
+
+Route::post('/validate-product', [ProductController::class, 'validateProduct']);
+
+Route::delete('/products/destroy/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+
+
+// Route::get('/', 'HomeController@index')->name('crud.index'); /* 一覧表示 */
+
+// Route::post('/destroy/{id}', 'HomeController@destroy'); /* レコード削除 */
+
+
