@@ -72,7 +72,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::post('/validate-product', [ProductController::class, 'validateProduct']);
 
-Route::delete('/products/destroy/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+Route::delete('/destroy/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 
 
 // Route::get('/', 'HomeController@index')->name('crud.index'); /* 一覧表示 */

@@ -56,13 +56,14 @@ class ProductController extends Controller //コントローラークラスを�
     }
 
     // ▼ 並び替えの処理を追加
-    $sort = $request->input('sort');            // 例: "price", "stock"
-    $direction = $request->input('direction');  // 例: "asc", "desc"
+    $sort = $request->input('sort');       // 例: price, stock
+    $direction = $request->input('direction'); // 例: asc, desc
 
-    if (in_array($sort, ['price', 'stock']) && in_array($direction, ['asc', 'desc'])) {
+    if ($sort && in_array($sort, ['price', 'stock']) &&
+        $direction && in_array($direction, ['asc', 'desc'])) {
         $query->orderBy($sort, $direction);
     } else {
-        $query->orderBy('id', 'asc'); // デフォルトの並び順
+        $query->orderBy('id', 'asc'); // デフォルト
     }
 
     $products = $query->get();
@@ -100,11 +101,11 @@ class ProductController extends Controller //コントローラークラスを�
         }
 
         if ($min_stock) {
-            $query->where('stock', '<', $mix_stock);
+            $query->where('stock', '>', $min_stock);
         }
 
         if ($max_stock) {
-            $query->where('stock', '>', $max_stock);
+            $query->where('stock', '<', $max_stock);
         }
 
         $products = $query->with('company')->get();

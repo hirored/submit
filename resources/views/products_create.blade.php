@@ -4,7 +4,7 @@
 <div class="container">
     <h1 class="mb-4">商品新規登録</h1>
 
-    <a href="{{ route('products.index') }}" class="btn btn-primary mb-3">商品一覧に戻る</a>
+    <a href="{{ route('products') }}" class="btn btn-primary mt-1 mb-3">商品一覧に戻る</a>
 
     <form method="POST" action="{{ route('products_store') }}" enctype="multipart/form-data">
 

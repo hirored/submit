@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <a href="{{ route('products.index') }}" class="btn btn-primary mt-1 mb-3">商品一覧画面に戻る</a>
+                <a href="{{ route('products') }}" class="btn btn-primary mt-1 mb-3">商品一覧画面に戻る</a>
                 <div class="card">
                     <div class="card-header"><h2>商品</h2></div>
 

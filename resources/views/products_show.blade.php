@@ -4,7 +4,7 @@
 <div class="container">
     <h1 class="mb-4">商品情報詳細</h1>
 
-    <a href="{{ route('products.index') }}" class="btn btn-primary mt-3">商品一覧画面に戻る</a>
+    <a href="{{ route('products') }}" class="btn btn-primary mt-1 mb-3">商品一覧画面に戻る</a>
 
     <dl class="row mt-3" >
         <dt class="col-sm-3">商品情報ID</dt>

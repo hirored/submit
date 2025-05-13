@@ -67,25 +67,14 @@
 
     <div class="products mt-5">
         <h2>商品情報</h2>
-        <table class="table table-striped">
+        <table class="table table-striped tablesorter"  id="sorttable">
             <thead>
                 <tr>
                     <th>商品ID</th>
                     <th>商品名</th>
                     <th>メーカー名</th>
-                    <th>価格
-                        <!-- <a href="{{ request()->fullUrlWithQuery(['sort' => 'price', 'direction' => 'asc']) }}">↑</a>
-                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'price', 'direction' => 'desc']) }}">↓</a> -->
-                        <a href="#" class="sort-link" data-sort="price" data-direction="asc">↑</a>
-                        <a href="#" class="sort-link" data-sort="price" data-direction="desc">↓</a>
-                    </th>
-                        
-                    <th>在庫数
-                        <!-- <a href="{{ request()->fullUrlWithQuery(['sort' => 'stock', 'direction' => 'asc']) }}">↑</a>
-                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'stock', 'direction' => 'desc']) }}">↓</a> -->
-                        <a href="#" class="sort-link" data-sort="stock" data-direction="asc">↑</a>
-                        <a href="#" class="sort-link" data-sort="stock" data-direction="desc">↓</a>
-                    </th>
+                    <th>価格</th>
+                    <th>在庫数</th>
                     <th>コメント</th>
                     <th>商品画像</th>
                 </tr>
@@ -102,11 +91,11 @@
                 <td>{{ $product->comment }}</td>
                 <td><img src="{{ asset($product->img_path) }}" alt="商品画像" width="100"></td>
                 <td>
-                <a href="{{ route('products.show', $product) }}" class="btn btn-info btn-sm mx-1">詳細表示</a>  
+                <a href="{{ route('products.show', $product) }}" class="btn btn-info btn-sm mt-1 mx-1">詳細表示</a>  
                     <form method="POST" action="{{ route('products.destroy', $product) }}" class="d-inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm mx-1">削除</button>
+                            <button type="submit"  data-product_id="{{$product->id}}" class="btn btn-danger btn-sm mx-1">削除</button>
                     </form>
             </td>
         </tr>
@@ -115,12 +104,31 @@
         </table>
     </div>
 
-    
-
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/css/theme.default.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src=“https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.1/js/jquery.tablesorter.min.js”></script> -->
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/js/jquery.tablesorter.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/css/theme.default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/widgets/widget-filter.min.js"></script>
+
+
+
 <script>
+    $(document).ready(function() {
+    $("#sorttable").tablesorter({
+    // theme: 'default',
+    // widgets: ['zebra', 'filter'], // ← filter を入れる
+    // widgetOptions: {
+    //   filter_reset: '.reset' // 任意：リセットボタンを指定する場合
+    // }
+  });
+});
 
     $(document).ready(function() {
+        // $("#sorttable").tablesorter(); // ソート機能を初期化
     $("#search-btn").click(function() {
         let keyword = $("#search_box").val();  // 入力されたキーワード取得
         let company_id = $("#company_id").val();
@@ -140,8 +148,6 @@
                     max_price: max_price,
                     min_stock: min_stock,
                     max_stock: max_stock,
-                    sort: sort,
-                    direction: direction
                     },
             dataType: "json",
             success: function(response) {
@@ -170,6 +176,7 @@
                         tableBody.append(row);
                     });
                 }
+                $("#sorttable").trigger("update");
             },
             error: function() {
                 $("#loading").hide();
@@ -178,6 +185,20 @@
         });
     });
 });
+
+
+// 初期の検索ボタン
+// $("#search-btn").click(function() {
+//     fetchProducts(); // 並び替えなしで検索
+// });
+
+// ソートボタン押下時の処理
+// $(document).on("click", ".sort-btn", function() {
+//     let sort = $(this).data("sort");
+//     let direction = $(this).data("direction");
+//     fetchProducts(sort, direction); // 並び替え条件付きで再検索
+// });
+
         $(function() {
             $(document).on('click', '.btn-danger', function(e) {
                 e.preventDefault();
