@@ -15,32 +15,6 @@ use Illuminate\Support\Facades\Log;
 class ProductController extends Controller //コントローラークラスを継承します（コントローラーの機能が使えるようになります）
 {
     
-    // public function index(Request $request){
-        
-    //     $query = Product::query();
-    //     if($request->product_name){
-    //         $query->where('product_name', 'LIKE', "%{$request->product_name}%");
-    //     }
-        
-    //     if($request->company_id){
-    //         $query->where('company_id', '=',$request->company_id);
-    //     }
-
-        
-        
-    //     $products = $query->orderBy('id', 'asc')->get();
-    //     $companies = Company::all();
-    //     // 全ての商品情報を取得しています。これが商品一覧画面で使われます。
-        
-    
-
-    //     // 商品一覧画面を表示します。その際に、先ほど取得した全ての商品情報を画面に渡します。
-    //     return view('products', compact('products','companies'));
-    //     // productsディレクトリのindex.blade.phpを表示させます
-    //     // compact('products')によって
-    //     // $productsという変数の内容が、ビューファイル側で利用できるようになります。
-    //     // ビューファイル内で$productsと書くことでその変数の中身にアクセスできます。
-    // }
     public function index(Request $request)
 {
     $query = Product::with('company'); // company情報も取得
@@ -109,7 +83,6 @@ class ProductController extends Controller //コントローラークラスを�
         }
 
         $products = $query->with('company')->get();
-        Log::info($products);
         
 
         if($request->hasFile('img_path')){ 

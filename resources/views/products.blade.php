@@ -119,16 +119,10 @@
 <script>
     $(document).ready(function() {
     $("#sorttable").tablesorter({
-    // theme: 'default',
-    // widgets: ['zebra', 'filter'], // ← filter を入れる
-    // widgetOptions: {
-    //   filter_reset: '.reset' // 任意：リセットボタンを指定する場合
-    // }
   });
 });
 
     $(document).ready(function() {
-        // $("#sorttable").tablesorter(); // ソート機能を初期化
     $("#search-btn").click(function() {
         let keyword = $("#search_box").val();  // 入力されたキーワード取得
         let company_id = $("#company_id").val();
@@ -186,18 +180,6 @@
     });
 });
 
-
-// 初期の検索ボタン
-// $("#search-btn").click(function() {
-//     fetchProducts(); // 並び替えなしで検索
-// });
-
-// ソートボタン押下時の処理
-// $(document).on("click", ".sort-btn", function() {
-//     let sort = $(this).data("sort");
-//     let direction = $(this).data("direction");
-//     fetchProducts(sort, direction); // 並び替え条件付きで再検索
-// });
 
         $(function() {
             $(document).on('click', '.btn-danger', function(e) {
