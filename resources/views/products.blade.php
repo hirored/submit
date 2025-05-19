@@ -52,7 +52,8 @@
 
         <!-- 絞り込みボタン -->
         <div class="col-sm-12 col-md-1">
-            <button id="search-btn" class="btn btn-primary">絞り込み</button>
+            <button id="search-btn" class="btn btn-primary" >絞り込み</button>
+
         </div>
     </form>
 </div>
@@ -97,9 +98,6 @@
                             @method('DELETE')
                             <button type="submit"  data-product_id="{{$product->id}}" class="btn btn-danger btn-sm mx-1">削除</button>
                     </form>
-                    <meta name="csrf-token" content="{{ csrf_token() }}">
-                        <button class="purchase-btn" data-id="{{ $product->id }}">購入</button>
-
             </td>
         </tr>
             @endforeach
@@ -164,6 +162,7 @@
                             <td><a href="/products/${product.id}" class="btn btn-info btn-sm mx-1">詳細表示</a>
                                 <button type="button" class="btn btn-danger btn-sm mx-1 delete-btn" data-product_id="${product.id}">削除</button>
                             </td>
+                            
                         </tr>`;
                         tableBody.append(row);
                     });
@@ -238,60 +237,6 @@
         });
     });
 
-//     $(document).ready(function() {
-//     $('.purchase-btn').on('click', function() {
-//         const productId = $(this).data('id');
-//         const quantity = 1; // ここは必要に応じて変更可能
-
-//         $.ajax({
-//             url: '/submit9/public/products/purchase/' + productId,
-//             type: 'POST',
-//             dataType: 'json',
-//             data: {
-//                 quantity: 1,
-//                 _token: $('meta[name="csrf-token"]').attr('content')
-//             },
-//             success: function(response) {
-//                 if (response.success) {
-//                 alert('購入成功！残り在庫: ' + response.remaining_stock);
-//                 $('#search-btn').click(); // 再検索して再描画
-//             }
-//             },
-//             error: function(xhr) {
-//                 alert('通信エラー: ' + xhr.responseJSON.message);
-//             }
-//         });
-//     });
-// });
-
-        $(document).ready(function() {
-    // イベント委任に変更（ここが重要！）
-    $(document).on('click', '.purchase-btn', function() {
-        const productId = $(this).data('id');
-        const quantity = 1;
-
-        $.ajax({
-            url: '/submit9/public/products/purchase/' + productId,
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                quantity: quantity,
-                _token: $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(response) {
-                if (response.success) {
-                    alert('購入成功！残り在庫: ' + response.remaining_stock);
-                    $('#search-btn').click(); // 一覧を再描画
-                } else {
-                    alert('購入エラー: ' + response.message);
-                }
-            },
-            error: function(xhr) {
-                alert('通信エラー: ' + xhr.responseJSON.message);
-            }
-        });
-    });
-});
 
     </script>
     @endsection

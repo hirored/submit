@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductShowController;
 // 詳細画面に作ったProductShowControllerを定義
 use App\Http\Controllers\ProductEditController;
 // 編集画面に作ったProductShowControllerを定義
+use App\Http\Controllers\Api\SaleController;
 
 
 
@@ -73,9 +74,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::post('/validate-product', [ProductController::class, 'validateProduct']);
 
 Route::delete('/destroy/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
-
-Route::post('/products/purchase/{id}', [ProductController::class, 'purchase'])->name('products.purchase');
-
 
 
 // Route::get('/', 'HomeController@index')->name('crud.index'); /* 一覧表示 */

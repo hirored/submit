@@ -3,7 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SaleController;
 
-Route::middleware('api')->group(function () {
-    Route::get('api/search-product', [ProductController::class, 'searchProduct']);
-});
+Route::post('/purchase', [SaleController::class, 'store']);
+
+
+
+
